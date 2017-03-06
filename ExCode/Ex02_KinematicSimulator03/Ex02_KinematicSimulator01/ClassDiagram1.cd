@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CKinematicSimulator" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAgAAIAAAAAAAAIAAAAAAEAQAAA=</HashCode>
+      <FileName>KinematicsSimulator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CParticle" Collapsed="true">
+    <Position X="3" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAACAEAAAAAAAAAAAACAAAAAAAAAIBAAAAAAAA=</HashCode>
+      <FileName>Particle.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CSimulator" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAEAAAAACCAAAAAAAAAAAAAgAgIAAAAAAEAQIAA=</HashCode>
+      <FileName>Simulator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CStopWatch" Collapsed="true">
+    <Position X="4.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAEAAEAAAAgKgAAAgIAgAAgBgAACAAQIBAAAAICA=</HashCode>
+      <FileName>StopWatch.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CVec3d" Collapsed="true">
+    <Position X="3" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAIAASBQAAAAAEAAAAAACBgAQAAAAA=</HashCode>
+      <FileName>Vec3d.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Typedef Name="_timeCountType" Collapsed="true">
+    <Position X="3" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>StopWatch.h</FileName>
+    </TypeIdentifier>
+  </Typedef>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>

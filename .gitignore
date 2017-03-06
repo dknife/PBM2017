@@ -45,3 +45,59 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+*.dat
+
+# power point and hwp
+*.hwp
+*.ppt
+*.pptx
+
+# VC project related files
+*.sln
+*.sdf
+*.suo
+*.idb
+*.tlog
+*.log
+*.vcxproj
+*.vcxproj.filters
+*.lastbuildstate
+*.ilk
+*.pdb
+*.manifest
+*.res
+*.cache
+*.rc
+*.user
+*.ipch
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
