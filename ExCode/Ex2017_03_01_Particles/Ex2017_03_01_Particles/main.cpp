@@ -10,7 +10,10 @@
 #define NPOINTS 1000
 bool bExploded = false;
 double ExplosionHeight = 3.0;
-double explosionV = 5.0;
+double explosionV = 3.0;
+double bounce = 0.5;
+
+
 double rand(double minV, double maxV) {
 	double interval = maxV - minV;
 	return minV + interval * ((rand() % 10001) / 10000.0);
@@ -48,6 +51,8 @@ public:
 	vec3d loc[NPOINTS];
 	vec3d vel[NPOINTS];
 	vec3d acc;
+	vec3d windForce;
+	double particleMass;
 
 	CMyWindow() : CKangGL() {
 		for(int i=0;i<NPOINTS;i++)
@@ -62,10 +67,12 @@ public:
 	virtual void init(void) {
 		for (int i = 0; i < NPOINTS; i++) {
 			loc[i].set(0, 0, 0);
-			vel[i].set(0, 15, 0);
+			vel[i].set(10, 15, 0);
 			point[i]->setLocation(loc[i].x, loc[i].y, loc[i].z);
 		}
 		acc.set(0, -10, 0);
+		windForce.set(-1, 0, 0);
+		particleMass = 0.1;
 		bExploded = false;
 		
 	};
@@ -86,10 +93,17 @@ public:
 		}
 		
 		for (int i = 0; i < NPOINTS; i++) {
-			vel[i] = vel[i] + acc * dt;
-			loc[i] = loc[i] + vel[i] * dt;
-			
-			
+			if (loc[i].y < 0) { // 충돌
+				loc[i].y *= -(bounce);
+				if (vel[i].y < 0.0) vel[i].y *= -(bounce);
+			}
+
+			vec3d netAcc = acc + windForce*(1.0 / particleMass);
+			vec3d vOld = vel[i];
+			vel[i] = vel[i] + netAcc * dt;			
+			vel[i].z = vel[i].z + netAcc.x * dt;
+			loc[i] = loc[i] + 0.5*(vOld + vel[i]) * dt;
+						
 			point[i]->setLocation(loc[i].x, loc[i].y, loc[i].z);
 		}
 		
