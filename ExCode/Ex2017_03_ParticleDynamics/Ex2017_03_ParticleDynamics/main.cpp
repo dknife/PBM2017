@@ -33,7 +33,6 @@ inline vec3d operator-(const vec3d& v1, const vec3d& v2) {
 class CMyWindow : public CKangGL {
 public:
 	CPoint *point;
-	//vec3d initX; vec3d initV;
 	vec3d loc;
 	vec3d vel;
 	vec3d acc;
@@ -41,7 +40,7 @@ public:
 	CMyWindow() : CKangGL() {
 		point = addPoint();
 		addPlane(5, 5, 0.2);
-		setCamera(0, 0, 30, 0, 0, 0, 0, 1, 0);
+		setCamera(5, 5, 10, 0, 0, 0, 0, 1, 0);
 	}
 	~CMyWindow() {
 		removePoints();
@@ -49,7 +48,7 @@ public:
 
 	virtual void init(void) {
 		loc.set(0, 0, 0);
-		vel.set(5, 15, 0);
+		vel.set(5, 5, 0);
 		acc.set(0, -10, 0);
 		point->setLocation(loc.x, loc.y, loc.z);
 	};
@@ -61,7 +60,12 @@ public:
 	virtual void doSimulation(double dt, double currentTime) { // time in seconds
 		vel = vel + acc * dt;
 		loc = loc + vel * dt;
+		if (loc.y < 0) {
+			loc.y *= -1.0;
+			vel.y *= -1.0;
+		}
 		point->setLocation(loc.x, loc.y, loc.z);
+		
 	}
 };
 

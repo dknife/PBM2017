@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
+bool bTrace = false;
 
 // Constructor
 CKangGL::CKangGL() : bStarted(false), bPaused(false), plane(NULL) {
@@ -181,7 +181,8 @@ void idle() {
 }
 
 void display() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	GLbitfield mask = bTrace ? GL_DEPTH_BUFFER_BIT: (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(mask);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	gluLookAt(win->mEx, win->mEy, win->mEz, win->mTx, win->mTy, win->mTz, win->mUx, win->mUy, win->mUz);
@@ -207,6 +208,7 @@ void keyboard(unsigned char c, int x, int y) {
 	case ' ': win->stop(); break;
 	case 'p': win->pause(); break;
 	case 'r': win->resume(); break;
+	case 't': bTrace = bTrace ? false : true; break;
 	}
 }
 
@@ -216,6 +218,7 @@ void GLinit(void) {
 void GLSetupWith(CKangGL *window, int *pArgc, char **argv, const char *title) {
 	win = window;
 	glutInit(pArgc, argv);
+	
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowPosition(100, 100);
 	glutInitWindowSize(500, 500);
@@ -226,6 +229,6 @@ void GLSetupWith(CKangGL *window, int *pArgc, char **argv, const char *title) {
 	glutDisplayFunc(display);
 	glutKeyboardFunc(keyboard);
 	glutReshapeFunc(reshapeFunction);
-	glClearColor(1, 1, 1, 1);
+	glClearColor(0.5, 0.5, 0.5, 1.0);
 	glutMainLoop();
 }

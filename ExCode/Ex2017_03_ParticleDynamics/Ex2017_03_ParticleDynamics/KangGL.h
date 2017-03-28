@@ -48,17 +48,7 @@ public:
 	void visualize(void) {
 		double currentLoc = 0.0;
 
-
-		glColor3f(0.5, 0.5, 0.5);
-		glBegin(GL_QUADS);
-		glVertex3f(-w, 0, h);
-		glVertex3f(w, 0, h);
-		glVertex3f(w, 0, -h);
-		glVertex3f(-w, 0, -h);
-		glEnd();
-
-		glDisable(GL_DEPTH_TEST);
-		glColor3f(1.0, 0.0, 0.0);
+		glColor3f(0.45, 0.45, 0.45);
 		glBegin(GL_LINES);
 		while (currentLoc < w) {
 			glVertex3f(currentLoc, 0.0, -h);
@@ -75,8 +65,7 @@ public:
 			glVertex3f(-w, 0.0, -currentLoc);
 			currentLoc += interval;
 		}
-		glEnd();
-		glEnable(GL_DEPTH_TEST);
+		glEnd();		
 	}
 };
 
