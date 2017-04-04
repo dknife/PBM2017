@@ -21,10 +21,15 @@ public:
 	vec3d vel[NSPHERES];
 	vec3d acc[NSPHERES];
 
+	float density;
+	float dragCoeff;
+
 	CMyWindow() : CKangGL() {
 		for(int i=0;i<NSPHERES;i++) sphere[i] = addSphere();
 		addPlane(50, 50, 5);
-		setCamera(15, 0, 10, 0, 0, 0, 0, 1, 0);
+		setCamera(15, 0, 15, 0, 0, 0, 0, 1, 0);
+		density=3.0;
+		dragCoeff = 10.5;
 	}
 	~CMyWindow() {
 		removeSpheres();
@@ -49,19 +54,64 @@ public:
 
 		for (int i = 0; i < NSPHERES; i++) {
 			collisionHandling(i);
+			// buoyant and drag force 
+			vec3d buoy(0, 0, 0);
+			vec3d drag(0, 0, 0);
+			if (loc[i].y < 0) {
+				buoy = - density * vec3d(0, -10, 0);
+				drag = - dragCoeff * vel[i];
+			}
+			acc[i] = vec3d(0, -10, 0) + buoy + drag;
 			vel[i] = vel[i] + acc[i] * dt;
-			loc[i] = loc[i] + vel[i] * dt;		
+			loc[i] = loc[i] + vel[i] * dt;	
+
+			
 			sphere[i]->setLocation(vec3d(loc[i].x, loc[i].y, loc[i].z));
 		}
 		
 	}
 
 	void collisionHandling(int i) {
+
 		float e = 0.75;
-		float penetration = sphere[i]->getRadius() - loc[i].y;
+		float minY = -5;
+		float penetration = sphere[i]->getRadius() + minY - loc[i].y;
 		if (penetration > 0) { // collision
 			loc[i].y += (1+e)*penetration;
 			if (vel[i].y < 0) vel[i].y *= -e;
+		}
+
+		float minX = -10;
+		float maxX = 10;
+		float minZ = -10;
+		float maxZ = 10;
+
+		// minx
+		penetration = sphere[i]->getRadius() + minX - loc[i].x;
+		if (penetration > 0) {
+			loc[i].x += (1 + e)*penetration;
+			if (vel[i].x < 0) vel[i].x *= -e;
+		}
+		
+		// maxx
+		penetration = loc[i].x - (maxX - sphere[i]->getRadius());
+		if (penetration > 0) {
+			loc[i].x -= (1 + e)*penetration;
+			if (vel[i].x > 0) vel[i].x *= -e;
+		}
+
+		// minz
+		penetration = sphere[i]->getRadius() + minZ - loc[i].z;
+		if (penetration > 0) {
+			loc[i].z += (1 + e)*penetration;
+			if (vel[i].z < 0) vel[i].z *= -e;
+		}
+
+		// maxz
+		penetration = loc[i].z - (maxZ - sphere[i]->getRadius());
+		if (penetration > 0) {
+			loc[i].z -= (1 + e)*penetration;
+			if (vel[i].z > 0) vel[i].z *= -e;
 		}
 	}
 };
