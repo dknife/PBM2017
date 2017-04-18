@@ -85,7 +85,7 @@ class CKangGL {
 	bool bPaused;
 
 	CPoint *pointList[256];
-	sphere *sphereList[256];
+	sphere *sphereList[1024];
 	int nPoints, nSpheres;
 
 	CPlane *plane;

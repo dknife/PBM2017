@@ -12,7 +12,7 @@ double rand(double minV, double maxV) {
 	return minV + interval * ((rand() % 10001) / 10000.0);
 }
 
-#define NSPHERES 100
+#define NSPHERES 150
 
 class CMyWindow : public CKangGL {
 public:
@@ -73,34 +73,40 @@ public:
 			sphere[i]->simulate(dt);
 			sphere[i]->initAcc();
 		}
-		
-		
 		*/
 
 		/*
 		for (int i = 0; i < NSPHERES; i++) {
-			for (int j = i+1; j < NSPHERES; j++) {
+			for (int j = i + 1; j < NSPHERES; j++) {
 				vec3d acc_ij;
-				vec3d xij = sphere[j]->getLocation() - sphere[i]->getLocation();
+				vec3d xi = sphere[i]->getLocation();
+				vec3d xj = sphere[j]->getLocation();
+
+				vec3d xij = xj - xi;
 				float len = xij.len();
 				if (len == 0) exit(0);
 				xij.normalize();
-				
+
 				float r1 = sphere[i]->getRadius();
 				float r2 = sphere[j]->getRadius();
+				float R = r1 + r2;
 				float m1 = sphere[i]->mass;
 				float m2 = sphere[j]->mass;
-				if (len < (r1 + r2)) {
-					len = (r1 + r2);
-					float d = (r1 + r2) - len;
-					sphere[i]->moveLocation(-d*xij);
-					sphere[j]->moveLocation( d*xij);
-					vec3d collisionVel = dot(sphere[i]->velocity - sphere[j]->velocity,  xij) * xij;
-					sphere[i]->velocity = sphere[i]->velocity - (m2/(m1+m2))*collisionVel;
-					sphere[j]->velocity = sphere[j]->velocity + (m1/(m1+m2))*collisionVel;
+				float M = m1 + m2;
+
+				
+				if (len < R) {
+					len = R;
+					float d = R - len;
+					sphere[i]->moveLocation(-(d*m2 / M)*xij);
+					sphere[j]->moveLocation((d*m1 / M)*xij);
+					vec3d collisionVel = dot(sphere[i]->velocity - sphere[j]->velocity, xij) * xij;
+					sphere[i]->velocity = sphere[i]->velocity - 1.5*(m2 / M)*collisionVel;
+					sphere[j]->velocity = sphere[j]->velocity + 1.5*(m1 / M)*collisionVel;
 				}
+
 				acc_ij = (G / (len*len)) * xij;
-				sphere[i]->addAcc(acc_ij * sphere[j]->mass);		
+				sphere[i]->addAcc(acc_ij * sphere[j]->mass);
 				sphere[j]->addAcc(-1.0*acc_ij * sphere[i]->mass);
 			}
 		}
@@ -110,6 +116,7 @@ public:
 			sphere[i]->initAcc();
 		}
 		*/
+
 
 		for (int i = 0; i < NSPHERES; i++) {
 			for (int j = i + 1; j < NSPHERES; j++) {
@@ -124,34 +131,36 @@ public:
 
 				float r1 = sphere[i]->getRadius();
 				float r2 = sphere[j]->getRadius();
+				float R = r1 + r2;
 				float m1 = sphere[i]->mass;
 				float m2 = sphere[j]->mass;
+				float M = m1 + m2;
 
 				int big = -1;
 				int small = -1;
-				if (len < 0.65*(r1 + r2)) {
+				if (len < 0.75*R) {
 
 					int big = r1>r2 ? i : j;
 					int small = r1>r2 ? j : i;
 					
-					sphere[big]->velocity = (m1*sphere[i]->velocity + m2*sphere[j]->velocity) / (m1 + m2);
-					sphere[big]->setRadius(pow(m1 + m2, 1/3.0));
-					sphere[big]->setLocation((m1*xi+m2*xj)/(m1+m2));
+					sphere[big]->velocity = (m1*sphere[i]->velocity + m2*sphere[j]->velocity) / M;
+					sphere[big]->setRadius(pow(M, 1/3.0));
+					sphere[big]->setLocation((m1*xi+m2*xj)/M);
 
-					sphere[small]->setLocation(vec3d(rand(-100, 100), rand(0, 0), rand(-100, 100)));
+					sphere[small]->setLocation(vec3d(rand(-100, 100), rand(-1,1), rand(-100, 100)));
 					vec3d newpos = sphere[small]->getLocation();
-					newpos = 0.001*newpos;
-					sphere[small]->setVelocity(vec3d(-newpos.x, -newpos.y, newpos.z));
+					newpos = 0.1*newpos;
+					sphere[small]->setVelocity(vec3d(-newpos.z, newpos.y, newpos.x));
 					sphere[small]->setRadius(rand(0.3, 1));
 				}
-				else if (len < (r1 + r2)) {
-					len = (r1 + r2);
-					float d = (r1 + r2) - len;
-					sphere[i]->moveLocation(-d*xij);
-					sphere[j]->moveLocation(d*xij);
+				else if (len < R) {
+					len = R;
+					float d = R - len;
+					sphere[i]->moveLocation(-(d*m2/M)*xij);
+					sphere[j]->moveLocation( (d*m1/M)*xij);
 					vec3d collisionVel = dot(sphere[i]->velocity - sphere[j]->velocity, xij) * xij;
-					sphere[i]->velocity = sphere[i]->velocity - 1.5*(m2/(m1+m2))*collisionVel;
-					sphere[j]->velocity = sphere[j]->velocity + 1.5*(m1/(m1+m2))*collisionVel;
+					sphere[i]->velocity = sphere[i]->velocity - 1.5*(m2/M)*collisionVel;
+					sphere[j]->velocity = sphere[j]->velocity + 1.5*(m1/M)*collisionVel;
 				}
 				
 				acc_ij = (G / (len*len)) * xij;
@@ -164,6 +173,7 @@ public:
 			sphere[i]->simulate(dt);
 			sphere[i]->initAcc();
 		}
+	
 	}
 	
 
