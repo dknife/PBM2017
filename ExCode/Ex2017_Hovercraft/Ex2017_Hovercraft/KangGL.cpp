@@ -130,6 +130,11 @@ void CKangGL::resume() {
 	bPaused = false;
 }
 
+void CKangGL::engine(int engineNumber) {
+	for (int i = 0; i < nHovers; i++) {
+		hoverList[i]->switchEngine(engineNumber);
+	}
+}
 
 //////////////////////////////////// timer
 void CKangGL::initTime(void) {
@@ -243,6 +248,10 @@ void reshapeFunction(int w, int h) {
 
 void keyboard(unsigned char c, int x, int y) {
 	switch (c) {
+	case '1': win->engine(0); break;
+	case '2': win->engine(1); break;
+	case '3': win->engine(2); break;
+	case '4': win->engine(3); break;
 	case 's': win->start(); break;
 	case ' ': win->stop(); break;
 	case 'p': win->pause(); break;

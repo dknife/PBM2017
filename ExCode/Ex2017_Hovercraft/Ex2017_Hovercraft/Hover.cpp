@@ -9,9 +9,19 @@ Hover::Hover() :
 	mass(1.0), I(1.0),
 	angle(3.14/4.0), aVel(0), aAcc(0)
 {
-	engine[0] = false; engine[1] = true;
+	engine[0] = false; engine[1] = false;
 	force[0] = vec3d(0, 1, 0);
 	force[1] = vec3d(0, 1, 0);
+	force[2] = vec3d(1, 0, 0);
+	force[3] = vec3d(-1, 0, 0);
+	r[0] = vec3d(-1, -1, 0);
+	r[1] = vec3d(1, -1, 0);
+	r[2] = vec3d(-1, 1, 0);
+	r[3] = vec3d(1,  1, 0);
+}
+
+void Hover::switchEngine(int idx) {
+	engine[idx] = engine[idx] ? false: true;
 }
 
 vec3d Hover::localToGlobal(vec3d l) {
@@ -26,13 +36,26 @@ vec3d Hover::localToGlobal(vec3d l) {
 
 void Hover::simulate(float dt) {
 	acc.set(0, 0, 0);
-
-	for (int i = 0; i < 2; i++) {
+	aAcc = 0;
+	vec3d torque(0, 0, 0);
+	for (int i = 0; i < NENGINES; i++) {
 		vec3d f = localToGlobal(force[i]);
-		if (engine[i]) acc = acc + f / mass;
+		if (engine[i]) {
+			// 선운동
+			acc = acc + f / mass;
+			// 회전운동
+			torque = cross(r[i], force[i]);
+			torque.z;
+			aAcc = aAcc + torque.z / I;
+		}
+
 	}
+	// 선운동
 	vel = vel + acc*dt;
 	loc = loc + vel*dt;
+	// 회전운동
+	aVel = aVel + aAcc*dt;
+	angle = angle + aVel*dt;
 }
 
 void Hover::visualize() {
@@ -47,5 +70,17 @@ void Hover::visualize() {
 	glVertex2f(1, -1);
 	glVertex2f(1, 1);
 	glEnd();
+
+	glColor3f(1, 0, 0);
+	for(int i=0;i<NENGINES;i++) {
+		if (engine[i]) {
+			glPushMatrix();
+			glTranslatef(r[i].x, r[i].y, r[i].z);
+			glutWireSphere(0.1, 5, 5);
+			glPopMatrix();
+		}
+	}
+	
+	glColor3f(0, 0, 1);
 	glPopMatrix();
 }

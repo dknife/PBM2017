@@ -136,7 +136,7 @@ public:
 	void stop();
 	void pause();
 	void resume();
-
+	void engine(int engineNumber);
 
 	CPoint *addPoint(void);
 	sphere *addSphere(void);
