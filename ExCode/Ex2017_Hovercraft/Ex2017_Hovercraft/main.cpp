@@ -23,7 +23,7 @@ public:
 		setCamera(0,0,50, 0, 0, 0, 0, 1, 0);		
 	}
 	~CMyWindow() {
-		removeSpheres();
+		removeAll();
 	};
 
 	virtual void init(void) {
@@ -35,8 +35,7 @@ public:
 	}
 
 	virtual void doSimulation(double dt, double currentTime) { // time in seconds
-
-		
+		pHover->simulate(dt);		
 	}	
 };
 
